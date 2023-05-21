@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.app.ws.exceptions.UserServiceException;
 import com.example.app.ws.ui.model.request.UpdateUserDetailsRequestModel;
 import com.example.app.ws.ui.model.request.UserDetailsRequestModel;
 import com.example.app.ws.ui.model.response.UserRest;
@@ -29,7 +28,7 @@ import com.example.app.ws.userservice.UserService;
 public class UserController {
 	@Autowired
 	UserService userService;
-	
+
 	Map<String, UserRest> users;
 
 	@GetMapping
@@ -41,14 +40,16 @@ public class UserController {
 
 	@GetMapping(path = "/{userId}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<UserRest> getUser(@PathVariable String userId) {
-		if (true)
-			throw new UserServiceException("A user service exception is thrown");
 
-		if (users.containsKey(userId)) {
-			return new ResponseEntity<>(users.get(userId), HttpStatus.OK);
-		} else {
+//		if (true)
+//			throw new UserServiceException("A user service exception is thrown");
+
+		UserRest userRest = userService.getUser(userId);
+
+		if (userRest != null)
+			return new ResponseEntity<>(userRest, HttpStatus.OK);
+		else
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
 	}
 
 	@PostMapping(consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }, produces = {

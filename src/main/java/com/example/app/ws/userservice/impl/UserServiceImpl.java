@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import com.example.app.ws.userservice.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
+	
 	Map<String, UserRest> users;
 	Utils utils;
 
@@ -24,9 +26,24 @@ public class UserServiceImpl implements UserService {
 	public UserServiceImpl(Utils utils) {
 		this.utils = utils;
 	}
+	
+	@Override
+	public UserRest getUser(String userId) {
+		
+		UserRest userRest = new UserRest();
+		
+		if (users.containsKey(userId)) {
+			BeanUtils.copyProperties(users.get(userId), userRest);
+		} else {
+			userRest = null;
+		}
+		
+		return userRest;
+	}
 
 	@Override
 	public UserRest createUser(UserDetailsRequestModel userDetails) {
+		
 		UserRest userRest = new UserRest();
 		userRest.setEmail(userDetails.getEmail());
 		userRest.setFirstName(userDetails.getFirstName());
